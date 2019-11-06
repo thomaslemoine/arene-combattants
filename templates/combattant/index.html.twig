@@ -13,6 +13,9 @@
                 <th>Strength</th>
                 <th>Intelligence</th>
                 <th>Pv</th>
+                <th>Created_at</th>
+                <th>Updated_at</th>
+                <th>Kill_at</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -24,6 +27,9 @@
                 <td>{{ combattant.strength }}</td>
                 <td>{{ combattant.intelligence }}</td>
                 <td>{{ combattant.pv }}</td>
+                <td>{{ combattant.createdAt ? combattant.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ combattant.updatedAt ? combattant.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ combattant.killAt ? combattant.killAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('combattant_show', {'id': combattant.id}) }}">show</a>
                     <a href="{{ path('combattant_edit', {'id': combattant.id}) }}">edit</a>
@@ -31,7 +37,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="9">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

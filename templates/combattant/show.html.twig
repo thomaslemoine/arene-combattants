@@ -27,6 +27,18 @@
                 <th>Pv</th>
                 <td>{{ combattant.pv }}</td>
             </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ combattant.createdAt ? combattant.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ combattant.updatedAt ? combattant.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Kill_at</th>
+                <td>{{ combattant.killAt ? combattant.killAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
         </tbody>
     </table>
 
