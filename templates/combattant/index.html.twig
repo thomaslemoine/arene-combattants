@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Combattant index{% endblock %}
+
+{% block body %}
+    <h1>Combattant index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Strength</th>
+                <th>Intelligence</th>
+                <th>Pv</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for combattant in combattants %}
+            <tr>
+                <td>{{ combattant.id }}</td>
+                <td>{{ combattant.name }}</td>
+                <td>{{ combattant.strength }}</td>
+                <td>{{ combattant.intelligence }}</td>
+                <td>{{ combattant.pv }}</td>
+                <td>
+                    <a href="{{ path('combattant_show', {'id': combattant.id}) }}">show</a>
+                    <a href="{{ path('combattant_edit', {'id': combattant.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('combattant_new') }}">Create new</a>
+{% endblock %}

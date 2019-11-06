@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\CombattantControllerRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\CombattantRepository")
  */
-class CombattantController
+class Combattant
 {
     /**
      * @ORM\Id()
@@ -19,7 +19,7 @@ class CombattantController
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nom;
+    private $name;
 
     /**
      * @ORM\Column(type="integer")
@@ -41,14 +41,14 @@ class CombattantController
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getName(): ?string
     {
-        return $this->nom;
+        return $this->name;
     }
 
-    public function setNom(string $nom): self
+    public function setName(string $name): self
     {
-        $this->nom = $nom;
+        $this->name = $name;
 
         return $this;
     }
