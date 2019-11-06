@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FighterRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Fighter
 {
@@ -50,6 +51,22 @@ class Fighter
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $killed_at;
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function onPrePersist()
+    {
+        $this->created_at = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function onPreUpdate()
+    {
+        $this->updated_at = new \DateTime();
+    }
 
     public function getId(): ?int
     {
