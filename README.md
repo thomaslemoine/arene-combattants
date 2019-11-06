@@ -3,7 +3,7 @@
 L'objectif est de réaliser une arène de combattants.
 
 
-##Fonctionnalités
+## Fonctionnalités
 
 - [ ] Consultation des combattants
 - [ ] Création d’un combattant
@@ -11,23 +11,23 @@ L'objectif est de réaliser une arène de combattants.
 - [ ] Modification/suppression d’un combattant
 - [ ] Lancement d'un tour de combat
 
-###Consultation des combattants
+### Consultation des combattants
 
 Un visiteur qui consulte la page d’accueil du site peut consulter la liste des combattantsde l'arène, ordonnés par date de création.Un combattant a au moins : un nom, une race,une force, une intelligence, un nombre de points de vie,une date de création, une date de modification, une date de décès.Les races possibles sont : Troll, Nain, Elfe
 
-###Création d’un combattant
+### Création d’un combattant
 
 Sur la page d’accueil, un bouton redirige vers une page de création d’un nouveau combattant.
 
-###Consultation d’un combattant
+### Consultation d’un combattant
 
 Depuis la liste des combattants, un clic sur le nom de l'un d'entre eux permet de l’afficher.Àlasuite de celui-ci, la liste de ses combats est aussi visible, classée par ordre de date.
 
-###Modification/suppression d’un combattant
+### Modification/suppression d’un combattant
 
 Sur la page de consultation d’un combattant, il est possible d’accéder àsa modification ou àsa suppression. Lorsque l'ontente de supprimer un combattant, un pop-updemande de confirmer l'action
 
-###Lancement d'un tour de combat
+### Lancement d'un tour de combat
 
 Vous pouvez à tout moment démarrer un tour. Lors de ce tour, chaque combattant se voit attribuer un adversaire aléatoirement. Un type de zone est également tiré aléatoirement au sort (désert, forêt, prairie). Une phase de résolution descombatsest lancée et résumée à l'écran. Par exemple :
 
@@ -70,11 +70,11 @@ Les types de zonesont une influence sur les combats :
 
 Un combattant mort ne peut plus participer aux combats suivants. Les survivants se voient régénérer leur stock de PV. Si à la fin d'un combat, un seul combattant vivant reste, il est affublé de l'étiquette "Vainqueur de tournoi" et voit son stock de PV augmenté de 10.
 
-###Consultation des combats
+### Consultation des combats
 
 De même que pour les combattants, on peut voir la liste des combats passés, qui ils impliquaient et leur déroulé...
 
-###API
+### API
 
 Vous construirezune api qui permettrade retourner en JSON :
 * La liste des combattants
@@ -84,17 +84,17 @@ Vous construirezune api qui permettrade retourner en JSON :
 
 Attention, certaines informations ne sont pas utiles à renvoyer(le slug par exemple)
 
-###SEO(Search Engine Optimization)
+### SEO(Search Engine Optimization)
 
 Pour améliorer le référencement, il est recommandéde faire les modifications suivantessur l'affichage des combattants:
 
 * Chaque combattantest accessible non pas via son id, mais via son slug. Le slugd’un combattantest le nomde celui-ci mis sous forme d’url. Par exemple pourle combattant ayant pour nom"Thorin Oakenshield, fils de Balin"auraitpour slug quelque chose comme : "thorin-oakenshield-fils-de-balin". Ilfaudra donc aussi vous assurer que chaque combattanta un slug différent ;
 * Le titre (balise title) de la page d’un combattanta pour valeur le nom du combattant.
 
-###Image associée au combattants
+### Image associée au combattants
 
 Ajoutez une image aux combattants.
 
-###Bonus
+### Bonus
 
 Prendre aussi en compte les caractères accentués dans le nomdes combattants.
