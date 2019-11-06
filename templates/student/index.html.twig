@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mes étudiants</title>
+</head>
+<body>
+
+<h1>Mes étudiants</h1>
+
+<ul id="navigation">
+    {% for student in students %}
+        <li>Nom: {{ student.nom }} et Prénom: {{ student.prenom }}</li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
