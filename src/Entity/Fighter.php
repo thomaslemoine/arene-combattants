@@ -5,10 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\CombattantRepository")
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\Entity(repositoryClass="App\Repository\FighterRepository")
  */
-class Combattant
+class Fighter
 {
     /**
      * @ORM\Id()
@@ -50,23 +49,7 @@ class Combattant
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $kill_at;
-
-    /**
-     * @ORM\PrePersist()
-     */
-    public function onPrePersist()
-    {
-        $this->created_at = new \DateTime();
-    }
-
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function onPreUpdate()
-    {
-        $this->updated_at = new \DateTime();
-    }
+    private $killed_at;
 
     public function getId(): ?int
     {
@@ -145,14 +128,14 @@ class Combattant
         return $this;
     }
 
-    public function getKillAt(): ?\DateTimeInterface
+    public function getKilledAt(): ?\DateTimeInterface
     {
-        return $this->kill_at;
+        return $this->killed_at;
     }
 
-    public function setKillAt(?\DateTimeInterface $kill_at): self
+    public function setKilledAt(?\DateTimeInterface $killed_at): self
     {
-        $this->kill_at = $kill_at;
+        $this->killed_at = $killed_at;
 
         return $this;
     }
