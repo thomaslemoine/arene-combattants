@@ -53,6 +53,11 @@ class Fighter
     private $killed_at;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Type", inversedBy="fighters")
+     */
+    private $type;
+
+    /**
      * @ORM\PrePersist()
      */
     public function onPrePersist()
@@ -153,6 +158,18 @@ class Fighter
     public function setKilledAt(?\DateTimeInterface $killed_at): self
     {
         $this->killed_at = $killed_at;
+
+        return $this;
+    }
+
+    public function getType(): ?Type
+    {
+        return $this->type;
+    }
+
+    public function setType(?Type $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
