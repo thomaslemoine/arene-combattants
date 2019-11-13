@@ -16,6 +16,7 @@ class FighterType extends AbstractType
             ->add('strength')
             ->add('intelligence')
             ->add('pv')
+            ->add('type')
         ;
     }
 
