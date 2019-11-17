@@ -12,8 +12,8 @@
 
     <h1><strong style="font-size: 70px">⚔</strong>️ Liste des combattants️</h1>
 
-    <div class="table-responsive mt-1">
-        <table class="table table-bordered table-striped" id="table_id">
+    <div class="table-responsive mt-1 mb-5">
+        <table class="table table-bordered table-striped" id="datatable">
             <thead>
             <tr>
                 <th>Id</th>
@@ -22,6 +22,7 @@
                 <th>Intelligence</th>
                 <th>Pv</th>
                 <th>Killed_at</th>
+                <th>Created at</th>
                 <th>actions</th>
             </tr>
             </thead>
@@ -34,6 +35,7 @@
                     <td>{{ fighter.intelligence }}</td>
                     <td>{{ fighter.pv }}</td>
                     <td>{{ fighter.killedAt ? fighter.killedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ fighter.createdAt ? fighter.createdAt|date('j F H:i') : '' }}</td>
                     <td>
                         <a class="btn btn-secondary" href="{{ path('fighter_show', {'id': fighter.id}) }}"><i class="fas fa-eye"></i></a>
                         <a class="btn btn-primary" href="{{ path('fighter_edit', {'id': fighter.id}) }}"><i class="fas fa-edit"></i></a>
