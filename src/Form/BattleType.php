@@ -12,7 +12,7 @@ class BattleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fighter')
+            ->add('fighter', null, ['attr' => ['class' => 'select2']])
             ->add('zone')
         ;
     }
