@@ -5,10 +5,10 @@ L'objectif est de réaliser une arène de combattants.
 
 ## Fonctionnalités
 
-- [ ] Consultation des combattants
+- [x] Consultation des combattants
 - [ ] Création d’un combattant
 - [ ] Consultation d’un combattant
-- [ ] Modification/suppression d’un combattant
+- [x] Modification/suppression d’un combattant
 - [ ] Lancement d'un tour de combat
 
 ### Consultation des combattants
