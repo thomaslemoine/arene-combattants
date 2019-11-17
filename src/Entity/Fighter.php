@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -56,6 +58,16 @@ class Fighter
      * @ORM\ManyToOne(targetEntity="App\Entity\Type", inversedBy="fighters")
      */
     private $type;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Battle", mappedBy="fighter")
+     */
+    private $zone;
+
+    public function __construct()
+    {
+        $this->zone = new ArrayCollection();
+    }
 
     /**
      * @ORM\PrePersist()
@@ -172,5 +184,38 @@ class Fighter
         $this->type = $type;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Battle[]
+     */
+    public function getZone(): Collection
+    {
+        return $this->zone;
+    }
+
+    public function addZone(Battle $zone): self
+    {
+        if (!$this->zone->contains($zone)) {
+            $this->zone[] = $zone;
+            $zone->addFighter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeZone(Battle $zone): self
+    {
+        if ($this->zone->contains($zone)) {
+            $this->zone->removeElement($zone);
+            $zone->removeFighter($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 }
