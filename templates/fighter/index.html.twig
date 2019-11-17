@@ -34,8 +34,8 @@
                     <td>{{ fighter.strength }}</td>
                     <td>{{ fighter.intelligence }}</td>
                     <td>{{ fighter.pv }}</td>
-                    <td>{{ fighter.killedAt ? fighter.killedAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ fighter.createdAt ? fighter.createdAt|date('j F H:i') : '' }}</td>
+                    <td>{{ fighter.killedAt ? fighter.killedAt|date('d-m-Y H:i:s') : '' }}</td>
+                    <td>{{ fighter.createdAt ? fighter.createdAt|date('d-m-Y') : '' }}</td>
                     <td>
                         <a class="btn btn-secondary" href="{{ path('fighter_show', {'id': fighter.id}) }}"><i class="fas fa-eye"></i></a>
                         <a class="btn btn-primary" href="{{ path('fighter_edit', {'id': fighter.id}) }}"><i class="fas fa-edit"></i></a>
