@@ -3,14 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Battle;
-use App\Entity\Zone;
 use App\Form\BattleType;
 use App\Repository\BattleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * @Route("/battle")
@@ -32,27 +30,16 @@ class BattleController extends AbstractController
      */
     public function new(Request $request): Response
     {
-
         $battle = new Battle();
         $form = $this->createForm(BattleType::class, $battle);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-
             $entityManager->persist($battle);
-            $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
-                ->enableExceptionOnInvalidIndex()
-                ->getPropertyAccessor();
             $entityManager->flush();
-            $fighters = $propertyAccessor->getValue($battle, 'fighter');
-            $zone = $propertyAccessor->getValue($battle, 'zone');
-            $this->fight($fighters, $zone);
-            dump($fighters);
-            die();
 
-
-            return $this->redirectToRoute('battle_show');
+            return $this->redirectToRoute('battle_index');
         }
 
         return $this->render('battle/new.html.twig', [
@@ -103,51 +90,5 @@ class BattleController extends AbstractController
         }
 
         return $this->redirectToRoute('battle_index');
-    }
-
-    /**
-     * @param $fighters
-     * @param Zone $zone
-     */
-    public function fight($fighters, Zone $zone){
-
-        foreach ($fighters as $fighter){
-
-            //La force de base est fixée à 10. Des multiplicateurs sont attribués :•Aux Nains : random entre 1,5 et 2
-            if($fighter->getType()->__toString() === 'Nain'){
-                $fighter->setStrength($fighter->getStrength() * mt_rand(1.5, 2));
-            }
-            //L'intelligence de base est fixée à 10. Des multiplicateurs sont attribués :•Aux Elfes : random entre 1,5 et 2
-            //Les PV de base sont fixés à 50. Des multiplicateurs sont attribués :•Aux Elfes : random entre 1,5 et 2,5
-            if($fighter->getType()->__toString() === 'Elfe'){
-                $fighter->setIntelligence($fighter->getIntelligence() * mt_rand(1.5, 2));
-                $fighter->setPv($fighter->getPv() * mt_rand(1.5, 2));
-            }
-            //Les PV de base sont fixés à 50. Des multiplicateurs sont attribués :•Aux Trolls : random entre 2,3 et 3
-            if($fighter->getType()->__toString() === 'Troll'){
-                $fighter->setPv($fighter->getPv() * mt_rand(2.3, 3));
-            }
-        };
-
-        switch ($zone->getName()){
-            case 'Forêt':
-                dump($fighters[0]->getType()->__toString());
-                if ($fighters[0]->getType()->__toString() === 'Nain'){
-
-                }
-
-                dump($fighters[0]);
-                dump('une foreetttt');
-                break;
-            case 'Désert' :
-                dump('un desert');
-                break;
-            case 'Prairie':
-                dump('une prairieee');
-                break;
-        }
-
-
-
     }
 }
