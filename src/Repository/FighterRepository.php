@@ -19,10 +19,9 @@ class FighterRepository extends ServiceEntityRepository
         parent::__construct($registry, Fighter::class);
     }
 
-    // /**
-    //  * @return Fighter[] Returns an array of Fighter objects
-    //  */
-
+     /**
+      * @return Fighter[] Returns an array of Fighter objects
+      */
     public function findAllFighterAlive()
     {
         return $this->createQueryBuilder('f')
