@@ -21,6 +21,7 @@
                 <th>Strength</th>
                 <th>Intelligence</th>
                 <th>Pv</th>
+                <th>Type</th>
                 <th>Killed_at</th>
                 <th>Created at</th>
                 <th>actions</th>
@@ -34,6 +35,7 @@
                     <td>{{ fighter.strength }}</td>
                     <td>{{ fighter.intelligence }}</td>
                     <td>{{ fighter.pv }}</td>
+                    <td><span class="badge badge-success">{{ fighter.type }}</span></td>
                     <td>{{ fighter.killedAt ? fighter.killedAt|date('d-m-Y H:i:s') : '' }}</td>
                     <td>{{ fighter.createdAt ? fighter.createdAt|date('d-m-Y') : '' }}</td>
                     <td>
