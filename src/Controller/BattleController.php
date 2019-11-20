@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Battle;
+use App\Entity\Fighter;
 use App\Entity\Zone;
 use App\Form\BattleType;
 use App\Repository\BattleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -106,26 +108,26 @@ class BattleController extends AbstractController
     }
 
     /**
-     * @param $fighters
+     * @param ArrayCollection $fighters
      * @param Zone $zone
      */
-    public function fight($fighters, Zone $zone){
+    public function fight($fighters, $zone){
 
         foreach ($fighters as $fighter){
 
             //La force de base est fixée à 10. Des multiplicateurs sont attribués :•Aux Nains : random entre 1,5 et 2
             if($fighter->getType()->__toString() === 'Nain'){
-                $fighter->setStrength($fighter->getStrength() * mt_rand(1.5, 2));
+                $fighter->setStrength($fighter->getStrength() * round(rand(15, 20) / 10));
             }
             //L'intelligence de base est fixée à 10. Des multiplicateurs sont attribués :•Aux Elfes : random entre 1,5 et 2
             //Les PV de base sont fixés à 50. Des multiplicateurs sont attribués :•Aux Elfes : random entre 1,5 et 2,5
             if($fighter->getType()->__toString() === 'Elfe'){
-                $fighter->setIntelligence($fighter->getIntelligence() * mt_rand(1.5, 2));
-                $fighter->setPv($fighter->getPv() * mt_rand(1.5, 2));
+                $fighter->setIntelligence($fighter->getIntelligence() * round(rand(15, 20) / 10));
+                $fighter->setPv($fighter->getPv() * round(rand(15, 20) / 10));
             }
             //Les PV de base sont fixés à 50. Des multiplicateurs sont attribués :•Aux Trolls : random entre 2,3 et 3
             if($fighter->getType()->__toString() === 'Troll'){
-                $fighter->setPv($fighter->getPv() * mt_rand(2.3, 3));
+                $fighter->setPv($fighter->getPv() * round(rand(23, 30) / 10));
             }
         };
 
