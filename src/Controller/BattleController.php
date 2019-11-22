@@ -52,6 +52,13 @@ class BattleController extends AbstractController
 //
 //        $entityManager->flush();
 
+        $nbAtttaquants = count($fighters);
+
+        if ($nbAtttaquants%2){
+            dump("$nbAtttaquants impair");
+            die();
+        }
+
         //TODO mmelanger le tableau
         $this->fight($fighters, $zones);
 
@@ -250,7 +257,7 @@ class BattleController extends AbstractController
 
 
         dump($tableau2);
-        die();
+
 
         foreach ($tableau2 as $val2){
 
