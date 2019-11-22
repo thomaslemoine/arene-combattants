@@ -64,9 +64,15 @@ class Fighter
      */
     private $zone;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Battle", mappedBy="winner_id")
+     */
+    private $battles;
+
     public function __construct()
     {
         $this->zone = new ArrayCollection();
+        $this->battles = new ArrayCollection();
     }
 
     /**
@@ -217,5 +223,36 @@ class Fighter
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection|Battle[]
+     */
+    public function getBattles(): Collection
+    {
+        return $this->battles;
+    }
+
+    public function addBattle(Battle $battle): self
+    {
+        if (!$this->battles->contains($battle)) {
+            $this->battles[] = $battle;
+            $battle->setWinnerId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBattle(Battle $battle): self
+    {
+        if ($this->battles->contains($battle)) {
+            $this->battles->removeElement($battle);
+            // set the owning side to null (unless already changed)
+            if ($battle->getWinnerId() === $this) {
+                $battle->setWinnerId(null);
+            }
+        }
+
+        return $this;
     }
 }

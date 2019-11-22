@@ -28,6 +28,16 @@ class Battle
      */
     private $zone;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Fighter", inversedBy="battles")
+     */
+    private $winner_id;
+
     public function __construct()
     {
         $this->fighter = new ArrayCollection();
@@ -72,6 +82,30 @@ class Battle
     public function setZone(?Zone $zone): self
     {
         $this->zone = $zone;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getWinnerId(): ?Fighter
+    {
+        return $this->winner_id;
+    }
+
+    public function setWinnerId(?Fighter $winner_id): self
+    {
+        $this->winner_id = $winner_id;
 
         return $this;
     }
