@@ -73,6 +73,8 @@ class BattleController extends AbstractController
 //            die();
 
 
+        die();
+
         return $this->redirectToRoute('battle_show');
 //        }
 //
@@ -178,6 +180,8 @@ class BattleController extends AbstractController
             if (count($fighters) < 2){ $nbFighter = false; };
         }
 
+        dump($tableau);
+
         foreach ($tableau as $val) {
 
             $combattants = $val->getFighter();
@@ -186,47 +190,49 @@ class BattleController extends AbstractController
                 case 'Forêt':
                     if ($combattants[0]->getType()->__toString() === 'Elfe') {
                         //bonus de force +3
-                        $combattants[0]->setStrength($combattants[0]->getStrength() + 3);
+                        $combattants[0]->setStrength(($combattants[0]->getStrength()) + 3);
                     }
                     if ($combattants[1]->getType()->__toString() === 'Elfe') {
                         //bonus de force +3
-                        $combattants[1]->setStrength($combattants[0]->getStrength() + 3);
+                        $combattants[1]->setStrength(($combattants[1]->getStrength()) + 3);
                     }
                     if ($combattants[0]->getType()->__toString() === 'Nain') {
                         //malus de force -2
-                        $combattants[0]->setStrength($combattants[0]->getStrength() - 2);
+                        $combattants[0]->setStrength(($combattants[0]->getStrength()) - 2);
                     }
                     if ($combattants[1]->getType()->__toString() === 'Nain') {
                         //malus de force -2
-                        $combattants[1]->setStrength($combattants[0]->getStrength() - 2);
+                        $combattants[1]->setStrength(($combattants[1]->getStrength()) - 2);
                     }
                     break;
                 case 'Désert' :
                     if ($combattants[0]->getType()->__toString() === 'Troll') {
                         //perte de 20% de leur PV
-                        $combattants[0]->setPv($combattants[0]->getPv() * 0.8);
+                        $combattants[0]->setPv(round(($combattants[0]->getPv()) * 0.8));
+                        dump($combattants[0]->getName());
                     }
                     if ($combattants[1]->getType()->__toString() === 'Troll') {
                         //perte de 20% de leur PV
-                        $combattants[1]->setPv($combattants[0]->getPv() * 0.8);
+                        $combattants[1]->setPv(round(($combattants[1]->getPv()) * 0.8));
+                        dump($combattants[1]->getName());
                     }
                     break;
                 case 'Prairie':
                     if ($combattants[0]->getType()->__toString() === 'Nain') {
                         //bonus de force +4
-                        $combattants[0]->setStrength($combattants[0]->getStrength() + 4);
+                        $combattants[0]->setStrength(($combattants[0]->getStrength()) + 4);
                     }
                     if ($combattants[1]->getType()->__toString() === 'Nain') {
                         //bonus de force +4
-                        $combattants[1]->setStrength($combattants[0]->getStrength() + 4);
+                        $combattants[1]->setStrength(($combattants[1]->getStrength()) + 4);
                     }
                     if ($combattants[0]->getType()->__toString() === 'Troll') {
                         //bonus de force +2
-                        $combattants[0]->setStrength($combattants[0]->getStrength() + 2);
+                        $combattants[0]->setStrength(($combattants[0]->getStrength()) + 2);
                     }
                     if ($combattants[1]->getType()->__toString() === 'Troll') {
                         //bonus de force +2
-                        $combattants[1]->setStrength($combattants[0]->getStrength() + 2);
+                        $combattants[1]->setStrength(($combattants[1]->getStrength()) + 2);
                     }
                     break;
             }
@@ -244,6 +250,7 @@ class BattleController extends AbstractController
 
 
         dump($tableau2);
+        die();
 
         foreach ($tableau2 as $val2){
 
@@ -264,15 +271,7 @@ class BattleController extends AbstractController
 
                 //Le 1 attaque en premier
                 //tant que le combattant 0 ou 1 n'est pas mort on attaque chacun son tour
-//                do{
-//                    if (($combattants[0]->getPv() < 0)){
-//                        echo " . $combattants[0]->getName() . est mort";
-//                    }
-//                    if (($combattants[1]->getPv() < 0)){
-//                        echo " . $combattants[0]->getName() . est mort";
-//                    }
-//                }
-                while (($combattants[0]->getPv() > 0) && ($combattants[1]->getPv() > 0))
+                while (($combattants[0]->getPv() >= 0) && ($combattants[1]->getPv() >= 0))
                 {
 
                     dump($combattants[0]->getPv());
@@ -300,54 +299,54 @@ class BattleController extends AbstractController
                 $entityManager->persist($tableau2[0]);
 
                 $entityManager->flush();
-
-
             }
 
             /***
              * DEUXIEME CAS
-
+             *
+             */
 
             // si le joueur 1 à moins d'intelligence, le joueur 0 attaque en premier
             if ($combattants[1]->getIntelligence() < $combattants[0]->getIntelligence())
             {
-            //Le 0 attaque en premier
-            //tant que le combattant 1 ou 0 n'est pas mort on attaque chacun son tour
-            while (($combattants[1]->getPv() > 0) || ($combattants[0]->getPv() > 0)){
 
-            $combattants[1]->setPv($combattants[1]->getPv() - $combattants[0]->getStrength());
-            $combattants[0]->setPv($combattants[0]->getPv() - $combattants[1]->getStrength());
+                dump($combattants[1]->getName() . ' < ' . $combattants[0]->getName() );
 
+                //Le 1 attaque en premier
+                //tant que le combattant 0 ou 1 n'est pas mort on attaque chacun son tour
+                while (($combattants[1]->getPv() >= 0) && ($combattants[0]->getPv() >= 0))
+                {
+
+                    dump($combattants[1]->getPv());
+
+                    $combattants[1]->setPv($combattants[1]->getPv() - $combattants[0]->getStrength());
+                    $combattants[0]->setPv($combattants[0]->getPv() - $combattants[1]->getStrength());
+
+                }
+
+                //si le combattant 0 est mort alors le winner est :
+                if ($combattants[0]->getPv() <= 0){
+                    $combattants[0]->setKilledAt(new \DateTime());
+                    $tableau2[0]->setWinnerId($combattants[1]);
+                }
+                //si le combattant 1 est mort alors le winner est :
+                if ($combattants[1]->getPv() <= 0){
+                    $combattants[1]->setKilledAt(new \DateTime());
+                    $tableau2[0]->setWinnerId($combattants[0]);
+                }
+
+                //on enregistre le battle
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($combattants[1]);
+                $entityManager->persist($combattants[0]);
+                $entityManager->persist($tableau2[0]);
+
+                $entityManager->flush();
             }
 
-            dump($combattants[1]->getName() . ' < ' . $combattants[0]->getName() );
-
-            //si le combattant 0 est mort alors le winner est :
-            if ($combattants[0]->getPv() == 0){
-            //                    $combattants[0]->setKilledAt(new \DateTime());
-            $battle->setWinnerId($combattants[1]);
-            }
-            //si le combattant 1 est mort alors le winner est :
-            if ($combattants[1]->getPv() == 0){
-            //                    $combattants[1]->setKilledAt(new \DateTime());
-            $battle->setWinnerId($combattants[0]);
-            }
-
-            //on enregistre le battle
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($combattants[1]);
-            $entityManager->persist($combattants[0]);
-            $entityManager->persist($battle);
-
-            $entityManager->flush();
-
-            }
-             */
 
 
         }
-
-        die();
 
     }
 }
