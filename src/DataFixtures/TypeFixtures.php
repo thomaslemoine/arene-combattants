@@ -11,11 +11,11 @@ class TypeFixtures extends Fixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $tableu= [
+        $tableau= [
             'Elfe', 'Troll', 'Nain'
         ];
 
-        foreach ($tableu as $val){
+        foreach ($tableau as $val){
             $type = new Type();
             $type->setName($val);
             $manager->persist($type);
