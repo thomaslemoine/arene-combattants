@@ -34,7 +34,7 @@
             {% for fighter in fighters %}
                 <tr>
                     <td>{{ fighter.id }}</td>
-                    <td><a href="{{ path('fighter_show', {'id': fighter.id}) }}">{{ fighter.name }}</a></td>
+                    <td><a href="{{ path('fighter_show', {'slug': fighter.slug}) }}">{{ fighter.name }}</a></td>
                     <td>{{ fighter.strength }}</td>
                     <td>{{ fighter.intelligence }}</td>
                     <td>{{ fighter.pv }}</td>
@@ -42,8 +42,8 @@
                     <td>{{ fighter.killedAt ? fighter.killedAt|date('d-m-Y H:i:s') : '' }}</td>
                     <td>{{ fighter.createdAt ? fighter.createdAt|date('d-m-Y') : '' }}</td>
                     <td>
-                        <a class="btn btn-secondary" href="{{ path('fighter_show', {'id': fighter.id}) }}"><i class="fas fa-eye"></i></a>
-                        <a class="btn btn-primary" href="{{ path('fighter_edit', {'id': fighter.id}) }}"><i class="fas fa-edit"></i></a>
+                        <a class="btn btn-secondary" href="{{ path('fighter_show', {'slug': fighter.slug}) }}"><i class="fas fa-eye"></i></a>
+                        <a class="btn btn-primary" href="{{ path('fighter_edit', {'slug': fighter.slug}) }}"><i class="fas fa-edit"></i></a>
                     </td>
                 </tr>
             {% else %}

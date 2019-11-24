@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Cocur\Slugify\Slugify;
 
 /**
  * @Route("/fighter")
@@ -31,10 +32,12 @@ class FighterController extends AbstractController
     public function new(Request $request): Response
     {
         $fighter = new Fighter();
+        $slugify = new Slugify();
         $form = $this->createForm(FighterType::class, $fighter);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $fighter->setSlug($slugify->slugify($fighter->getName()));
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($fighter);
             $entityManager->flush();
@@ -49,7 +52,7 @@ class FighterController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="fighter_show", methods={"GET"})
+     * @Route("/{slug}", name="fighter_show", methods={"GET"})
      */
     public function show(Fighter $fighter): Response
     {
@@ -59,7 +62,7 @@ class FighterController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="fighter_edit", methods={"GET","POST"})
+     * @Route("/{slug}/edit", name="fighter_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Fighter $fighter): Response
     {
@@ -79,7 +82,7 @@ class FighterController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="fighter_delete", methods={"DELETE"})
+     * @Route("/{slug}", name="fighter_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Fighter $fighter): Response
     {
