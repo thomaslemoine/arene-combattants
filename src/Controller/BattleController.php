@@ -59,8 +59,7 @@ class BattleController extends AbstractController
             die();
         }
 
-        //TODO mmelanger le tableau
-        $this->fight($fighters, $zones);
+        $this->initialize($fighters, $zones);
 
 //        $form = $this->createForm(BattleType::class, $battle);
 //        $form->handleRequest($request);
@@ -139,7 +138,7 @@ class BattleController extends AbstractController
      * @param ArrayCollection $fighters
      * @param ArrayCollection $zones
      */
-    public function fight($fighters, $zones){
+    public function initialize($fighters, $zones){
 
         foreach ($fighters as $fighter){
             //La force de base est fixée à 10. Des multiplicateurs sont attribués :•Aux Nains : random entre 1,5 et 2
@@ -158,14 +157,17 @@ class BattleController extends AbstractController
             }
         };
 
+
         $nbFighter = true;
+        //on mélange le tableau de combattants
+        shuffle($fighters);
 
         while ($nbFighter){
 
             $battle = new Battle();
 
             $fighter1 = array_shift($fighters);
-            $fighter2 = array_shift($fighters);
+            $fighter2 = array_pop($fighters);
 
             $battle->addFighter($fighter1);
             $battle->addFighter($fighter2);
@@ -174,20 +176,17 @@ class BattleController extends AbstractController
             $randomInt = array_rand($zones);
             $battle->setZone($zones[$randomInt]);
 
+            //zone prairie par défaut
+//            $battle->setZone($zones[0]);
+
             $tableau[] = $battle;
-
-            // TODO A deplacer à la fin du combat
-            /*
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($battle);
-
-            $entityManager->flush();
-            */
 
             if (count($fighters) < 2){ $nbFighter = false; };
         }
 
-        dump($tableau);
+//        dump('avant foreach CAS TYPE');
+//        dump($tableau);
+//        die();
 
         foreach ($tableau as $val) {
 
@@ -216,12 +215,10 @@ class BattleController extends AbstractController
                     if ($combattants[0]->getType()->__toString() === 'Troll') {
                         //perte de 20% de leur PV
                         $combattants[0]->setPv(round(($combattants[0]->getPv()) * 0.8));
-                        dump($combattants[0]->getName());
                     }
                     if ($combattants[1]->getType()->__toString() === 'Troll') {
                         //perte de 20% de leur PV
                         $combattants[1]->setPv(round(($combattants[1]->getPv()) * 0.8));
-                        dump($combattants[1]->getName());
                     }
                     break;
                 case 'Prairie':
@@ -243,19 +240,208 @@ class BattleController extends AbstractController
                     }
                     break;
             }
+
+            $combattants[0]->setStrength($combattants[0]->getStrength() / 4);
+            $combattants[1]->setStrength($combattants[1]->getStrength() / 4);
         }
 
-        $this->start($tableau);
+        dump('apres foreach CAS ZONES');
+        dump($tableau);
+//        die();
+
+        $this->startFight($tableau);
 
     }
 
 
-    public function start($tableau){
+    public function startFight($tableau){
+
+        $description = "";
+
+        foreach ($tableau as $battle){
+
+            $arrayFighters = $battle->getFighter();
+
+
+            if ($arrayFighters[0]->getIntelligence() < $arrayFighters[1]->getIntelligence()){
+                dump('CAS 1');
+                while (($arrayFighters[0]->getPv() > 0) && ($arrayFighters[1]->getPv() > 0)){
+                    $arrayFighters[0]->setPv($arrayFighters[0]->getPv() - $arrayFighters[1]->getStrength());
+                    $description .= ($arrayFighters[1]->getName() . ' inflige ' . $arrayFighters[1]->getStrength() . ' PV à ' . $arrayFighters[0]->getName() . '<br>');
+
+                    $arrayFighters[1]->setPv($arrayFighters[1]->getPv() - $arrayFighters[0]->getStrength());
+                    $description .= ($arrayFighters[0]->getName() . ' inflige ' . $arrayFighters[0]->getStrength() . ' PV à ' . $arrayFighters[1]->getName() . '<br>');
+                }
+
+                //si le combattant 0 est mort alors le winner est :
+                if ($arrayFighters[0]->getPv() <= 0){
+                    $description .= ($arrayFighters[1]->getName(). ' tue ' . $arrayFighters[0]->getName() . ', il remporte le match <br>');
+                    $description .= ( '<strong>🎊 ' .$arrayFighters[1]->getName(). '</strong> <br>💀 ' . $arrayFighters[0]->getName() . ' <br>');
+                    $arrayFighters[0]->setKilledAt(new \DateTime());
+                    $battle->setWinnerId($arrayFighters[1]);
+                }
+                //si le combattant 1 est mort alors le winner est :
+                elseif ($arrayFighters[1]->getPv() <= 0){
+                    $description .= ($arrayFighters[0]->getName(). ' tue ' . $arrayFighters[1]->getName() . ', il remporte le match <br>');
+                    $description .= ( '<strong>🎊 ' .$arrayFighters[0]->getName(). '</strong> <br>💀 ' . $arrayFighters[1]->getName() . ' <br>');
+                    $arrayFighters[1]->setKilledAt(new \DateTime());
+                    $battle->setWinnerId($arrayFighters[0]);
+                }
+
+                $battle->setDescription($description);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($battle);
+                $entityManager->persist($arrayFighters[1]);
+                $entityManager->persist($arrayFighters[0]);
+
+                $entityManager->flush();
+                $description = "";
+            }
+
+            if ($arrayFighters[1]->getIntelligence() < $arrayFighters[0]->getIntelligence()){
+                dump('CAS 2');
+                while (($arrayFighters[0]->getPv() > 0) && ($arrayFighters[1]->getPv() > 0)){
+                    $arrayFighters[1]->setPv($arrayFighters[0]->getPv() - $arrayFighters[0]->getStrength());
+                    $description .= ($arrayFighters[0]->getName() . ' inflige ' . $arrayFighters[0]->getStrength() . ' PV à ' . $arrayFighters[1]->getName() . '<br>');
+
+                    $arrayFighters[0]->setPv($arrayFighters[0]->getPv() - $arrayFighters[1]->getStrength());
+                    $description .= ($arrayFighters[1]->getName() . ' inflige ' . $arrayFighters[1]->getStrength() . ' PV à ' . $arrayFighters[0]->getName() . '<br>');
+                }
+
+                //si le combattant 0 est mort alors le winner est :
+                if ($arrayFighters[0]->getPv() <= 0){
+                    $description .= ($arrayFighters[1]->getName(). ' tue ' . $arrayFighters[0]->getName() . ', il remporte le match <br>');
+                    $description .= ( '<strong>🎊 ' .$arrayFighters[1]->getName(). '</strong> <br>💀 ' . $arrayFighters[0]->getName() . ' <br>');
+                    $arrayFighters[0]->setKilledAt(new \DateTime());
+                    $battle->setWinnerId($arrayFighters[1]);
+                }
+                //si le combattant 1 est mort alors le winner est :
+                elseif ($arrayFighters[1]->getPv() <= 0){
+                    $description .= ($arrayFighters[0]->getName(). ' tue ' . $arrayFighters[1]->getName() . ', il remporte le match <br>');
+                    $description .= ( '<strong>🎊 ' .$arrayFighters[0]->getName(). '</strong> <br>💀 ' . $arrayFighters[1]->getName() . ' <br>');
+                    $arrayFighters[1]->setKilledAt(new \DateTime());
+                    $battle->setWinnerId($arrayFighters[0]);
+                }
+
+                $battle->setDescription($description);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($battle);
+                $entityManager->persist($arrayFighters[1]);
+                $entityManager->persist($arrayFighters[0]);
+
+                $entityManager->flush();
+                $description = "";
+            }
+
+            if ($arrayFighters[1]->getIntelligence() === $arrayFighters[0]->getIntelligence() && ($arrayFighters[1]->getPv() != $arrayFighters[0]->getPv())){
+                dump('CAS 3');
+                while (($arrayFighters[0]->getPv() > 0) && ($arrayFighters[1]->getPv() > 0)){
+                    $arrayFighters[1]->setPv($arrayFighters[0]->getPv() - $arrayFighters[0]->getStrength());
+                    $description .= ($arrayFighters[0]->getName() . ' inflige ' . $arrayFighters[0]->getStrength() . ' PV à ' . $arrayFighters[1]->getName() . '<br>');
+
+                    $arrayFighters[0]->setPv($arrayFighters[0]->getPv() - $arrayFighters[1]->getStrength());
+                    $description .= ($arrayFighters[1]->getName() . ' inflige ' . $arrayFighters[1]->getStrength() . ' PV à ' . $arrayFighters[0]->getName() . '<br>');
+                }
+
+                //si le combattant 0 est mort alors le winner est :
+                if ($arrayFighters[0]->getPv() <= 0){
+                    $description .= ($arrayFighters[1]->getName(). ' tue ' . $arrayFighters[0]->getName() . ', il remporte le match <br>');
+                    $description .= ( '<strong>🎊 ' .$arrayFighters[1]->getName(). '</strong> <br>💀 ' . $arrayFighters[0]->getName() . ' <br>');
+                    $arrayFighters[0]->setKilledAt(new \DateTime());
+                    $battle->setWinnerId($arrayFighters[1]);
+                }
+                //si le combattant 1 est mort alors le winner est :
+                elseif ($arrayFighters[1]->getPv() <= 0){
+                    $description .= ($arrayFighters[0]->getName(). ' tue ' . $arrayFighters[1]->getName() . ', il remporte le match <br>');
+                    $description .= ( '<strong>🎊 ' .$arrayFighters[0]->getName(). '</strong> <br>💀 ' . $arrayFighters[1]->getName() . ' <br>');
+                    $arrayFighters[1]->setKilledAt(new \DateTime());
+                    $battle->setWinnerId($arrayFighters[0]);
+                }
+
+                $battle->setDescription($description);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($battle);
+                $entityManager->persist($arrayFighters[1]);
+                $entityManager->persist($arrayFighters[0]);
+
+                $entityManager->flush();
+                $description = "";
+            }
+
+            if (($arrayFighters[1]->getIntelligence() === $arrayFighters[0]->getIntelligence()) && ($arrayFighters[1]->getStrength() === $arrayFighters[0]->getStrength()) && ($arrayFighters[1]->getPv() === $arrayFighters[0]->getPv())){
+                dump('CAS 4 IDENTIQUE');
+//                $int = random_int(0,1);
+//                $arrayFighters[$int]->setPv(0);
+
+                while (($arrayFighters[0]->getPv() > 0) && ($arrayFighters[1]->getPv() > 0)){
+                    $arrayFighters[1]->setPv($arrayFighters[0]->getPv() - $arrayFighters[0]->getStrength());
+                    $description .= ($arrayFighters[0]->getName() . ' inflige ' . $arrayFighters[0]->getStrength() . ' PV à ' . $arrayFighters[1]->getName() . '<br>');
+
+                    $arrayFighters[0]->setPv($arrayFighters[0]->getPv() - $arrayFighters[1]->getStrength());
+                    $description .= ($arrayFighters[1]->getName() . ' inflige ' . $arrayFighters[1]->getStrength() . ' PV à ' . $arrayFighters[0]->getName() . '<br>');
+                }
+
+                //si le combattant 0 est mort alors le winner est :
+                if ($arrayFighters[0]->getPv() <= 0){
+                    $description .= ($arrayFighters[1]->getName(). ' tue ' . $arrayFighters[0]->getName() . ', il remporte le match <br>');
+                    $description .= ( '<strong>🎊 ' .$arrayFighters[1]->getName(). '</strong> <br>💀 ' . $arrayFighters[0]->getName() . ' <br>');
+                    $arrayFighters[0]->setKilledAt(new \DateTime());
+                    $battle->setWinnerId($arrayFighters[1]);
+                }
+                //si le combattant 1 est mort alors le winner est :
+                elseif ($arrayFighters[1]->getPv() <= 0){
+                    $description .= ($arrayFighters[0]->getName(). ' tue ' . $arrayFighters[1]->getName() . ', il remporte le match <br>');
+                    $description .= ( '<strong>🎊 ' .$arrayFighters[0]->getName(). '</strong> <br>💀 ' . $arrayFighters[1]->getName() . ' <br>');
+                    $arrayFighters[1]->setKilledAt(new \DateTime());
+                    $battle->setWinnerId($arrayFighters[0]);
+                }
+
+                $battle->setDescription($description);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($battle);
+                $entityManager->persist($arrayFighters[1]);
+                $entityManager->persist($arrayFighters[0]);
+
+                $entityManager->flush();
+                $description = "";
+            }
+        }
+
+        //les vainqueurs se voient augmenter leurs stocks de PV de 50+10
+        foreach ($tableau as $battle){
+            $winners[] = $battle->getWinnerId();
+        }
+        foreach ($winners as $winner){
+            $winner->setPv($winner->getPv() + 60);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($winner);
+            $entityManager->flush();
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+    public function fight($tableau){
 
 
         $tableau2 = $tableau;
+        $description = "";
 
-
+        dump('LANCEMENT COMBAT ⚔️');
         dump($tableau2);
 
 
@@ -263,90 +449,119 @@ class BattleController extends AbstractController
 
             $combattants = $val2->getFighter();
 
-            /**
-             *
-             * PREMIER CAS
-             *
-             */
+
 
 
             // si le joueur 0 à moins d'intelligence, le joueur 1 attaque en premier
             if ($combattants[0]->getIntelligence() < $combattants[1]->getIntelligence())
             {
-
-                dump($combattants[0]->getName() . ' < ' . $combattants[1]->getName() );
-
                 //Le 1 attaque en premier
                 //tant que le combattant 0 ou 1 n'est pas mort on attaque chacun son tour
-                while (($combattants[0]->getPv() >= 0) && ($combattants[1]->getPv() >= 0))
+                while (($combattants[0]->getPv() > 0) && ($combattants[1]->getPv() > 0))
                 {
 
-                    dump($combattants[0]->getPv());
-
-                    $combattants[0]->setPv($combattants[0]->getPv() - $combattants[1]->getStrength());
-                    $combattants[1]->setPv($combattants[1]->getPv() - $combattants[0]->getStrength());
-
+                    if ($combattants[0]->getPv() > 0) {
+                        $combattants[0]->setPv($combattants[0]->getPv() - $combattants[1]->getStrength());
+                        $description .= ($combattants[1]->getName() . ' inflige ' . $combattants[1]->getStrength() . ' PV à ' . $combattants[0]->getName() . '<br>');
+                    }else{
+                        break;
+                    }
+                    if ($combattants[1]->getPv() > 0) {
+                        $combattants[1]->setPv($combattants[1]->getPv() - $combattants[0]->getStrength());
+                        $description .= ($combattants[0]->getName() . ' inflige ' . $combattants[0]->getStrength() . ' PV à ' . $combattants[1]->getName() . '<br>');
+                    }else{
+                        break;
+                    }
                 }
 
                 //si le combattant 0 est mort alors le winner est :
                 if ($combattants[0]->getPv() <= 0){
+                    $description .= ($combattants[1]->getName(). ' tue ' . $combattants[0]->getName() . ', il remporte le match <br>');
+                    $description .= ( '<strong>🎊 ' .$combattants[1]->getName(). '</strong> <br>💀 ' . $combattants[0]->getName() . ' <br>');
+
+
                     $combattants[0]->setKilledAt(new \DateTime());
-                    $tableau2[0]->setWinnerId($combattants[1]);
+                    $val2->setWinnerId($combattants[1]);
                 }
                 //si le combattant 1 est mort alors le winner est :
                 if ($combattants[1]->getPv() <= 0){
+                    $description .= ($combattants[0]->getName(). ' tue ' . $combattants[1]->getName() . ', il remporte le match <br>');
+                    dump($val2->getDescription());
                     $combattants[1]->setKilledAt(new \DateTime());
-                    $tableau2[0]->setWinnerId($combattants[0]);
+                    $val2->setWinnerId($combattants[0]);
                 }
 
                 //on enregistre le battle
+                dump($combattants[0]);
+                dump($combattants[1]);
+                print_r($description);
+                $val2->setDescription($description);
+                die();
                 $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($val2);
                 $entityManager->persist($combattants[1]);
                 $entityManager->persist($combattants[0]);
-                $entityManager->persist($tableau2[0]);
-
-                $entityManager->flush();
             }
 
-            /***
-             * DEUXIEME CAS
-             *
-             */
 
-            // si le joueur 1 à moins d'intelligence, le joueur 0 attaque en premier
-            if ($combattants[1]->getIntelligence() < $combattants[0]->getIntelligence())
+
+            dump('DEUXIEME CAS');
+
+            // si le joueur 1 à moins d'intelligence, le joueur 0 attaque en premier ou que le joueur 1 = joeur 2
+            if (($combattants[1]->getIntelligence() < $combattants[0]->getIntelligence()) || ($combattants[1]->getIntelligence() === $combattants[0]->getIntelligence()))
             {
-
-                dump($combattants[1]->getName() . ' < ' . $combattants[0]->getName() );
-
-                //Le 1 attaque en premier
+                //Le 0 attaque en premier
                 //tant que le combattant 0 ou 1 n'est pas mort on attaque chacun son tour
-                while (($combattants[1]->getPv() >= 0) && ($combattants[0]->getPv() >= 0))
+//                while (($combattants[1]->getPv() > 1) && ($combattants[0]->getPv() > 1))
+                $bool = true;
+
+                while ($bool)
                 {
+                    if ($combattants[1]->getPv() > 0){
+                        $combattants[1]->setPv( $combattants[1]->getPv() - $combattants[0]->getStrength() );
+                        $description .= ($combattants[0]->getName(). ' inflige ' . $combattants[0]->getStrength() . ' PV à ' . $combattants[1]->getName(). '<br>');
+                        $bool = true;
+                    }
 
-                    dump($combattants[1]->getPv());
+                    if ($combattants[0]->getPv() > 0) {
+                        $combattants[0]->setPv( $combattants[0]->getPv() - $combattants[1]->getStrength() );
+                        $description .= ($combattants[1]->getName() . ' inflige ' . $combattants[1]->getStrength() . ' PV à ' . $combattants[0]->getName() . '<br>');
+                        $bool = true;
+                    }
 
-                    $combattants[1]->setPv($combattants[1]->getPv() - $combattants[0]->getStrength());
-                    $combattants[0]->setPv($combattants[0]->getPv() - $combattants[1]->getStrength());
-
+                    if($combattants[1]->getPv() < 1 || $combattants[0]->getPv() < 1){
+                        $bool = false;
+                    }
                 }
 
                 //si le combattant 0 est mort alors le winner est :
                 if ($combattants[0]->getPv() <= 0){
+                    $description .= ($combattants[1]->getName(). ' tue ' . $combattants[0]->getName() . ', il remporte le match <br>');
+                    $description .= ( '<strong>🎊 ' .$combattants[1]->getName(). '</strong> <br>💀 ' . $combattants[0]->getName() . ' <br>');
+
+
                     $combattants[0]->setKilledAt(new \DateTime());
-                    $tableau2[0]->setWinnerId($combattants[1]);
+                    $val2->setWinnerId($combattants[1]);
                 }
                 //si le combattant 1 est mort alors le winner est :
                 if ($combattants[1]->getPv() <= 0){
+                    $description .= ($combattants[0]->getName(). ' tue ' . $combattants[1]->getName() . ', il remporte le match <br>');
+                    dump($val2->getDescription());
                     $combattants[1]->setKilledAt(new \DateTime());
-                    $tableau2[0]->setWinnerId($combattants[0]);
+                    $val2->setWinnerId($combattants[0]);
                 }
 
                 //on enregistre le battle
+                dump($combattants[0]);
+                dump($combattants[1]);
+                print_r($description);
+                $val2->setDescription($description);
+
                 $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($val2);
                 $entityManager->persist($combattants[1]);
                 $entityManager->persist($combattants[0]);
-                $entityManager->persist($tableau2[0]);
+
 
                 $entityManager->flush();
             }
@@ -356,4 +571,6 @@ class BattleController extends AbstractController
         }
 
     }
+
+    */
 }
