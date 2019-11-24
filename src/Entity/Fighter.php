@@ -244,7 +244,7 @@ class Fighter
     {
         if (!$this->battles->contains($battle)) {
             $this->battles[] = $battle;
-            $battle->setWinnerId($this);
+            $battle->setWinner($this);
         }
 
         return $this;
@@ -255,8 +255,8 @@ class Fighter
         if ($this->battles->contains($battle)) {
             $this->battles->removeElement($battle);
             // set the owning side to null (unless already changed)
-            if ($battle->getWinnerId() === $this) {
-                $battle->setWinnerId(null);
+            if ($battle->getWinner() === $this) {
+                $battle->setWinner(null);
             }
         }
     }

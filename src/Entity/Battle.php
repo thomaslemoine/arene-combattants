@@ -36,7 +36,12 @@ class Battle
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Fighter", inversedBy="battles")
      */
-    private $winner_id;
+    private $winner;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $created_at;
 
     public function __construct()
     {
@@ -98,14 +103,26 @@ class Battle
         return $this;
     }
 
-    public function getWinnerId(): ?Fighter
+    public function getWinner(): ?Fighter
     {
-        return $this->winner_id;
+        return $this->winner;
     }
 
-    public function setWinnerId(?Fighter $winner_id): self
+    public function setWinner(?Fighter $winner): self
     {
-        $this->winner_id = $winner_id;
+        $this->winner = $winner;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }
