@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Fighter{% endblock %}
+{% block title %}{{ fighter.name }}{% endblock %}
 
 {% block body %}
     <h1>Fighter</h1>
@@ -28,6 +28,10 @@
                 <td>{{ fighter.pv }}</td>
             </tr>
             <tr>
+                <th>Type</th>
+                <td>{{ fighter.type }}</td>
+            </tr>
+            <tr>
                 <th>Created_at</th>
                 <td>{{ fighter.createdAt ? fighter.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
@@ -44,7 +48,7 @@
 
     <a href="{{ path('fighter_index') }}">back to list</a>
 
-    <a href="{{ path('fighter_edit', {'id': fighter.id}) }}">edit</a>
+    <a href="{{ path('fighter_edit', {'slug': fighter.slug}) }}">edit</a>
 
     {{ include('fighter/_delete_form.html.twig') }}
 {% endblock %}

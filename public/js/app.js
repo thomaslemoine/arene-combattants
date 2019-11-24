@@ -25,4 +25,9 @@ $(document).ready( function () {
             }
         }
     });
+    $('.select2').select2({
+        maximumSelectionLength: 2,
+        placeholder: 'Sélectionner des combattants',
+        language: "fr"
+    });
 } );

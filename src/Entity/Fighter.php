@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Cocur\Slugify\Slugify;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FighterRepository")
@@ -56,6 +59,27 @@ class Fighter
      * @ORM\ManyToOne(targetEntity="App\Entity\Type", inversedBy="fighters")
      */
     private $type;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Battle", mappedBy="fighter")
+     */
+    private $zone;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Battle", mappedBy="winner_id")
+     */
+    private $battles;
+
+    public function __construct()
+    {
+        $this->zone = new ArrayCollection();
+        $this->battles = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $slug;
 
     /**
      * @ORM\PrePersist()
@@ -170,6 +194,81 @@ class Fighter
     public function setType(?Type $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection|Battle[]
+     */
+    public function getZone(): Collection
+    {
+        return $this->zone;
+    }
+
+    public function addZone(Battle $zone): self
+    {
+        if (!$this->zone->contains($zone)) {
+            $this->zone[] = $zone;
+            $zone->addFighter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeZone(Battle $zone): self
+    {
+        if ($this->zone->contains($zone)) {
+            $this->zone->removeElement($zone);
+            $zone->removeFighter($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return Collection|Battle[]
+     */
+    public function getBattles(): Collection
+    {
+        return $this->battles;
+    }
+
+    public function addBattle(Battle $battle): self
+    {
+        if (!$this->battles->contains($battle)) {
+            $this->battles[] = $battle;
+            $battle->setWinner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBattle(Battle $battle): self
+    {
+        if ($this->battles->contains($battle)) {
+            $this->battles->removeElement($battle);
+            // set the owning side to null (unless already changed)
+            if ($battle->getWinner() === $this) {
+                $battle->setWinner(null);
+            }
+        }
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
