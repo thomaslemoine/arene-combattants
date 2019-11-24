@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Cocur\Slugify\Slugify;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FighterRepository")
@@ -56,6 +57,11 @@ class Fighter
      * @ORM\ManyToOne(targetEntity="App\Entity\Type", inversedBy="fighters")
      */
     private $type;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $slug;
 
     /**
      * @ORM\PrePersist()
@@ -170,6 +176,18 @@ class Fighter
     public function setType(?Type $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
