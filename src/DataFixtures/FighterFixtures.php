@@ -8,6 +8,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Faker;
+use Cocur\Slugify\Slugify;
 
 class FighterFixtures extends Fixture implements OrderedFixtureInterface
 {
@@ -18,10 +19,11 @@ class FighterFixtures extends Fixture implements OrderedFixtureInterface
 
         for ($i = 0; $i < 20; $i++) {
             $fighter = new Fighter();
-            $fighter->setName($faker->firstName);
+            $fighter->setName($faker->name);
             $fighter->setStrength(10);
             $fighter->setIntelligence(10);
             $fighter->setPv(50);
+            $fighter->setSlug((new Slugify())->slugify($fighter->getName()));
 
             $fighter->setType($this->getReference('typeNain'));
             $manager->persist($fighter);
@@ -29,10 +31,11 @@ class FighterFixtures extends Fixture implements OrderedFixtureInterface
 
         for ($i = 0; $i < 20; $i++) {
             $fighter = new Fighter();
-            $fighter->setName($faker->firstName);
+            $fighter->setName($faker->name);
             $fighter->setStrength(10);
             $fighter->setIntelligence(10);
             $fighter->setPv(50);
+            $fighter->setSlug((new Slugify())->slugify($fighter->getName()));
 
             $fighter->setType($this->getReference('typeElfe'));
             $manager->persist($fighter);
@@ -41,10 +44,11 @@ class FighterFixtures extends Fixture implements OrderedFixtureInterface
 
         for ($i = 0; $i < 20; $i++) {
             $fighter = new Fighter();
-            $fighter->setName($faker->firstName);
+            $fighter->setName($faker->name);
             $fighter->setStrength(10);
             $fighter->setIntelligence(10);
             $fighter->setPv(50);
+            $fighter->setSlug((new Slugify())->slugify($fighter->getName()));
 
             $fighter->setType($this->getReference('typeTroll'));
             $manager->persist($fighter);
