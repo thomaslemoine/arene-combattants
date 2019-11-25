@@ -238,12 +238,17 @@ class BattleController extends AbstractController
 
             if ($arrayFighters[0]->getIntelligence() < $arrayFighters[1]->getIntelligence()) {
                 dump('CAS 1');
+                $count = 0;
                 while (($arrayFighters[0]->getPv() > 0) && ($arrayFighters[1]->getPv() > 0)) {
-                    $arrayFighters[0]->setPv($arrayFighters[0]->getPv() - round($arrayFighters[1]->getStrength() / 4));
-                    $description .= ($arrayFighters[1]->getName() . ' inflige ' . round($arrayFighters[1]->getStrength() / 4) . ' PV à ' . $arrayFighters[0]->getName() . '<br>');
-
-                    $arrayFighters[1]->setPv($arrayFighters[1]->getPv() - round($arrayFighters[0]->getStrength() / 4));
-                    $description .= ($arrayFighters[0]->getName() . ' inflige ' . round($arrayFighters[0]->getStrength() / 4) . ' PV à ' . $arrayFighters[1]->getName() . '<br>');
+                    if ($count %2 ){
+                        $arrayFighters[0]->setPv($arrayFighters[0]->getPv() - round($arrayFighters[1]->getStrength() / 4));
+                        $description .= ($arrayFighters[1]->getName() . ' inflige ' . round($arrayFighters[1]->getStrength() / 4) . ' PV à ' . $arrayFighters[0]->getName() . '<br>');
+                    }
+                    else{
+                        $arrayFighters[1]->setPv($arrayFighters[1]->getPv() - round($arrayFighters[0]->getStrength() / 4));
+                        $description .= ($arrayFighters[0]->getName() . ' inflige ' . round($arrayFighters[0]->getStrength() / 4) . ' PV à ' . $arrayFighters[1]->getName() . '<br>');
+                    }
+                    $count++;
                 }
 
                 //si le combattant 0 est mort alors le winner est :
@@ -273,12 +278,16 @@ class BattleController extends AbstractController
 
             if ($arrayFighters[1]->getIntelligence() < $arrayFighters[0]->getIntelligence()) {
                 dump('CAS 2');
+                $count = 0;
                 while (($arrayFighters[0]->getPv() > 0) && ($arrayFighters[1]->getPv() > 0)) {
-                    $arrayFighters[1]->setPv($arrayFighters[0]->getPv() - round($arrayFighters[0]->getStrength() / 4));
-                    $description .= ($arrayFighters[0]->getName() . ' inflige ' . round($arrayFighters[0]->getStrength() / 4) . ' PV à ' . $arrayFighters[1]->getName() . '<br>');
-
-                    $arrayFighters[0]->setPv($arrayFighters[0]->getPv() - round($arrayFighters[1]->getStrength() / 4));
-                    $description .= ($arrayFighters[1]->getName() . ' inflige ' . round($arrayFighters[1]->getStrength() / 4) . ' PV à ' . $arrayFighters[0]->getName() . '<br>');
+                    if ($count %2 ) {
+                        $arrayFighters[1]->setPv($arrayFighters[0]->getPv() - round($arrayFighters[0]->getStrength() / 4));
+                        $description .= ($arrayFighters[0]->getName() . ' inflige ' . round($arrayFighters[0]->getStrength() / 4) . ' PV à ' . $arrayFighters[1]->getName() . '<br>');
+                    }else{
+                        $arrayFighters[0]->setPv($arrayFighters[0]->getPv() - round($arrayFighters[1]->getStrength() / 4));
+                        $description .= ($arrayFighters[1]->getName() . ' inflige ' . round($arrayFighters[1]->getStrength() / 4) . ' PV à ' . $arrayFighters[0]->getName() . '<br>');
+                    }
+                    $count++;
                 }
 
                 //si le combattant 0 est mort alors le winner est :
@@ -306,14 +315,18 @@ class BattleController extends AbstractController
                 $description = "";
             }
 
-            if ($arrayFighters[1]->getIntelligence() === $arrayFighters[0]->getIntelligence() && ($arrayFighters[1]->getPv() != $arrayFighters[0]->getPv())) {
+            if ($arrayFighters[1]->getIntelligence() === $arrayFighters[0]->getIntelligence() ) {
                 dump('CAS 3');
+                $count = 0;
                 while (($arrayFighters[0]->getPv() > 0) && ($arrayFighters[1]->getPv() > 0)) {
-                    $arrayFighters[1]->setPv($arrayFighters[0]->getPv() - round($arrayFighters[0]->getStrength() / 4));
-                    $description .= ($arrayFighters[0]->getName() . ' inflige ' . round($arrayFighters[0]->getStrength() / 4) . ' PV à ' . $arrayFighters[1]->getName() . '<br>');
-
-                    $arrayFighters[0]->setPv($arrayFighters[0]->getPv() - round($arrayFighters[1]->getStrength() / 4));
-                    $description .= ($arrayFighters[1]->getName() . ' inflige ' . round($arrayFighters[1]->getStrength() / 4) . ' PV à ' . $arrayFighters[0]->getName() . '<br>');
+                    if ($count %2 ) {
+                        $arrayFighters[1]->setPv($arrayFighters[0]->getPv() - round($arrayFighters[0]->getStrength() / 4));
+                        $description .= ($arrayFighters[0]->getName() . ' inflige ' . round($arrayFighters[0]->getStrength() / 4) . ' PV à ' . $arrayFighters[1]->getName() . '<br>');
+                    }else{
+                        $arrayFighters[0]->setPv($arrayFighters[0]->getPv() - round($arrayFighters[1]->getStrength() / 4));
+                        $description .= ($arrayFighters[1]->getName() . ' inflige ' . round($arrayFighters[1]->getStrength() / 4) . ' PV à ' . $arrayFighters[0]->getName() . '<br>');
+                    }
+                    $count++;
                 }
 
                 //si le combattant 0 est mort alors le winner est :
@@ -341,6 +354,7 @@ class BattleController extends AbstractController
                 $description = "";
             }
 
+            /*
             if (($arrayFighters[1]->getIntelligence() === $arrayFighters[0]->getIntelligence()) && ($arrayFighters[1]->getStrength() === $arrayFighters[0]->getStrength()) && ($arrayFighters[1]->getPv() === $arrayFighters[0]->getPv())) {
                 dump('CAS 4 IDENTIQUE');
 
@@ -373,7 +387,7 @@ class BattleController extends AbstractController
 
                 $entityManager->flush();
                 $description = "";
-            }
+            }*/
 
         }
 
@@ -382,7 +396,7 @@ class BattleController extends AbstractController
             $winners[] = $battle->getWinner();
         }
         foreach ($winners as $winner) {
-            $winner->setPv($winner->getPv() + 10);
+            $winner->setPv(50);
             $winner->setStrength(10);
             $winner->setIntelligence(10);
             $entityManager = $this->getDoctrine()->getManager();
