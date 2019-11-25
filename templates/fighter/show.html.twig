@@ -5,6 +5,12 @@
 {% block body %}
     <h1>🧝🏾‍♀️ {{ fighter.name }}</h1>
 
+    <div class="col-md-2">
+        <img src="{{ vich_uploader_asset(fighter, 'imageFile') }}" class="img-fluid">
+    </div>
+
+    <br>
+
     <table class="table">
         <tbody>
             <tr>

@@ -6,10 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Cocur\Slugify\Slugify;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FighterRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @Vich\Uploadable
  */
 class Fighter
 {
@@ -19,6 +22,21 @@ class Fighter
      * @ORM\Column(type="integer")
      */
     private $id;
+
+
+    /**
+     * @Vich\UploadableField(mapping="fighter_image", fileNameProperty="imageName")
+     *
+     * @var File
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     *
+     * @var string
+     */
+    private $imageName;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -271,5 +289,34 @@ class Fighter
         $this->slug = $slug;
 
         return $this;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $imageFile
+     */
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updated_at = new \DateTimeImmutable();
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageName(?string $imageName): void
+    {
+        $this->imageName = $imageName;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
     }
 }
