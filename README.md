@@ -1,4 +1,4 @@
-# Arène de combattants
+# Arène de combattants :anger:
 
 [Sujet](https://github.com/thomaslemoine/arene-combattants/blob/master/TP%20Symfony.pdf)
 
