@@ -3,20 +3,20 @@
 {% block title %}{{ fighter.name }}{% endblock %}
 
 {% block body %}
-    <h1>Fighter</h1>
+    <h1>🧝🏾‍♀️ {{ fighter.name }}</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>ID</th>
                 <td>{{ fighter.id }}</td>
             </tr>
             <tr>
-                <th>Name</th>
+                <th>Nom</th>
                 <td>{{ fighter.name }}</td>
             </tr>
             <tr>
-                <th>Strength</th>
+                <th>Force</th>
                 <td>{{ fighter.strength }}</td>
             </tr>
             <tr>
@@ -24,31 +24,31 @@
                 <td>{{ fighter.intelligence }}</td>
             </tr>
             <tr>
-                <th>Pv</th>
+                <th>PV</th>
                 <td>{{ fighter.pv }}</td>
             </tr>
             <tr>
-                <th>Type</th>
+                <th>Race</th>
                 <td>{{ fighter.type }}</td>
             </tr>
             <tr>
-                <th>Created_at</th>
+                <th>Création</th>
                 <td>{{ fighter.createdAt ? fighter.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>Updated_at</th>
+                <th>Modification</th>
                 <td>{{ fighter.updatedAt ? fighter.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>Killed_at</th>
+                <th>Décès</th>
                 <td>{{ fighter.killedAt ? fighter.killedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('fighter_index') }}">back to list</a>
+    <a href="{{ path('fighter_index') }}" class="btn btn-primary" role="button">Retour à la liste</a>
 
-    <a href="{{ path('fighter_edit', {'slug': fighter.slug}) }}">edit</a>
+    <a class="btn btn-warning" href="{{ path('fighter_edit', {'slug': fighter.slug}) }}">Editer</a>
 
     {{ include('fighter/_delete_form.html.twig') }}
 {% endblock %}

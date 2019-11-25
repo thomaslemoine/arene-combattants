@@ -4,15 +4,6 @@
 
 {% block body %}
 
-    <div class="nav-scroller bg-white box-shadow mb-4">
-        <nav class="nav nav-underline">
-            <a class="nav-link" href="{{ path('fighter_new') }}">Nouveau combattant</a>
-            <a class="nav-link" href="{{ path('type_index') }}">Types</a>
-            <a class="nav-link" href="{{ path('zone_index') }}">Zones</a>
-            <a class="nav-link" href="{{ path('battle_index') }}">Combats</a>
-        </nav>
-    </div>
-
     <h1><strong style="font-size: 70px">⚔</strong>️ Liste des combattants️</h1>
 
     <div class="table-responsive mt-1 mb-5">
@@ -20,14 +11,14 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
-                <th>Strength</th>
+                <th>Nom</th>
+                <th>Force</th>
                 <th>Intelligence</th>
-                <th>Pv</th>
-                <th>Type</th>
-                <th>Killed_at</th>
-                <th>Created at</th>
-                <th>actions</th>
+                <th>PV</th>
+                <th>Race</th>
+                <th>Décès</th>
+                <th>Création</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -48,7 +39,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="9">no records found</td>
+                    <td colspan="9">Aucun enregistrement trouvé</td>
                 </tr>
             {% endfor %}
             </tbody>
