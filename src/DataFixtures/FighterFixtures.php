@@ -23,6 +23,7 @@ class FighterFixtures extends Fixture implements OrderedFixtureInterface
             $fighter->setStrength(10);
             $fighter->setIntelligence(10);
             $fighter->setPv(50);
+            $fighter->setImageName($faker->image('public/images/fighter', 200, 200, 'cats', false));
             $fighter->setSlug((new Slugify())->slugify($fighter->getName()));
 
             $fighter->setType($this->getReference('typeNain'));
@@ -35,6 +36,7 @@ class FighterFixtures extends Fixture implements OrderedFixtureInterface
             $fighter->setStrength(10);
             $fighter->setIntelligence(10);
             $fighter->setPv(50);
+            $fighter->setImageName($faker->image('public/images/fighter', 200, 200, 'cats', false));
             $fighter->setSlug((new Slugify())->slugify($fighter->getName()));
 
             $fighter->setType($this->getReference('typeElfe'));
@@ -48,6 +50,7 @@ class FighterFixtures extends Fixture implements OrderedFixtureInterface
             $fighter->setStrength(10);
             $fighter->setIntelligence(10);
             $fighter->setPv(50);
+            $fighter->setImageName($faker->image('public/images/fighter', 200, 200, 'cats', false));
             $fighter->setSlug((new Slugify())->slugify($fighter->getName()));
 
             $fighter->setType($this->getReference('typeTroll'));
