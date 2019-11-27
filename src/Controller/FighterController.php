@@ -17,7 +17,7 @@ use Cocur\Slugify\Slugify;
 class FighterController extends AbstractController
 {
     /**
-     * @Route("/", name="fighter_index", methods={"GET"})
+     * @Route   ("/", name="fighter_index", methods={"GET"})
      */
     public function index(FighterRepository $fighterRepository): Response
     {
@@ -54,10 +54,13 @@ class FighterController extends AbstractController
     /**
      * @Route("/{slug}", name="fighter_show", methods={"GET"})
      */
-    public function show(Fighter $fighter): Response
+    public function show(Fighter $fighter, FighterRepository $fighterRepository): Response
     {
+        $battles = $fighterRepository->findBattles($fighter);
+
         return $this->render('fighter/show.html.twig', [
             'fighter' => $fighter,
+            'battles' => $battles
         ]);
     }
 

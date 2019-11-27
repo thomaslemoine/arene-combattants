@@ -32,15 +32,23 @@ class FighterRepository extends ServiceEntityRepository
     }
 
 
-    /*
-    public function findOneBySomeField($value): ?Fighter
+
+    public function findBattles($fighter)
     {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT *
+            FROM  battle b
+            INNER JOIN battle_fighter bf 
+                ON b.id = bf.battle_id 
+            INNER JOIN fighter f 
+                ON f.id = bf.fighter_id  
+            WHERE bf.fighter_id = :idFighter';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['idFighter' => $fighter->getId()]);
+
+        return $stmt->fetchAll();
     }
-    */
+
+
 }
