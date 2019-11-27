@@ -3,10 +3,15 @@
 {% block title %}Battle index{% endblock %}
 
 {% block body %}
-    <h1>💥 Liste des combats</h1>
+    <h1>Liste des combats</h1>
 
-    <a href="{{ path('battle_new') }}" class="btn btn-primary" role="button">Lancer les combats</a>
+    <a href="{{ path('battle_new') }}" class="btn btn-danger" role="button">Lancer les combats</a>
     <hr>
+    {% for message in app.flashes('warning') %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>
+    {% endfor %}
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}
