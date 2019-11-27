@@ -23,7 +23,6 @@ class Fighter
      */
     private $id;
 
-
     /**
      * @Vich\UploadableField(mapping="fighter_image", fileNameProperty="imageName")
      *
@@ -32,7 +31,7 @@ class Fighter
     private $imageFile;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @var string
      */
@@ -98,6 +97,11 @@ class Fighter
      * @ORM\Column(type="text")
      */
     private $slug;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $king;
 
     /**
      * @ORM\PrePersist()
@@ -318,5 +322,17 @@ class Fighter
     public function getImageName(): ?string
     {
         return $this->imageName;
+    }
+
+    public function getKing(): ?bool
+    {
+        return $this->king;
+    }
+
+    public function setKing(?bool $king): self
+    {
+        $this->king = $king;
+
+        return $this;
     }
 }

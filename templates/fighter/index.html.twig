@@ -25,11 +25,25 @@
             {% for fighter in fighters %}
                 <tr>
                     <td>{{ fighter.id }}</td>
-                    <td><a href="{{ path('fighter_show', {'slug': fighter.slug}) }}">{{ fighter.name }}</a></td>
+                    <td>
+                        {% if fighter.king == 1 %}
+                            <a data-toggle="tooltip" data-placement="top" title="Vainqueur de tournoi" href="{{ path('fighter_show', {'slug': fighter.slug}) }}">
+                            <strong style="font-size: 20px">👑</strong> {{ fighter.name }}
+                            </a>
+                        {% endif %}
+                        {% if fighter.king == 0 %}
+                            <a href="{{ path('fighter_show', {'slug': fighter.slug}) }}">
+                                {{ fighter.name }}
+                            </a>
+                        {% endif %}
+
+                    </td>
                     <td>{{ fighter.strength }}</td>
                     <td>{{ fighter.intelligence }}</td>
                     <td>{{ fighter.pv }}</td>
-                    <td><span class="badge badge-success">{{ fighter.type }}</span></td>
+                    <td>
+                        <span class="badge badge-success">{{ fighter.type }}</span>
+                    </td>
                     <td>{{ fighter.killedAt ? fighter.killedAt|date('d-m-Y H:i:s') : '' }}</td>
                     <td>{{ fighter.createdAt ? fighter.createdAt|date('d-m-Y') : '' }}</td>
                     <td>

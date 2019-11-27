@@ -3,7 +3,7 @@
 {% block title %}{{ fighter.name }}{% endblock %}
 
 {% block body %}
-    <h1>🧝🏾‍♀️ {{ fighter.name }}</h1>
+    <h1>{{ fighter.name }}</h1>
 
     <div class="col-md-2">
         <img src="{{ vich_uploader_asset(fighter, 'imageFile') }}" class="img-fluid">
@@ -51,6 +51,17 @@
             </tr>
         </tbody>
     </table>
+
+    <h1>Combat(s) réalisé(s)</h1>
+    {% if battles == null %}
+        <p>Aucun combat réalisé</p>
+    {% endif %}
+    {% for battle in battles %}
+        <a href="{{ path('battle_show', {'id': battle.battle_id}) }}">Combat N°{{ battle.battle_id }}</a><br>
+    {% endfor  %}
+
+    <hr>
+
 
     <a href="{{ path('fighter_index') }}" class="btn btn-primary" role="button">Retour à la liste</a>
 

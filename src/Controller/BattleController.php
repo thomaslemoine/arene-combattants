@@ -42,8 +42,17 @@ class BattleController extends AbstractController
         $nbAtttaquants = count($fighters);
 
         if ($nbAtttaquants === 1) {
+            $fighters[0]->setKing(1);
             dump("Le grand du tournoi est " . $fighters[0]->getName());
-            die();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($fighters[0]);
+            $entityManager->flush();
+
+            $this->addFlash('warning', '👑 Le grand vainqueur du tournoi est ' . $fighters[0]->getName());
+
+            return $this->render('battle/index.html.twig', [
+                'battles' => $battleRepository->findAll(),
+            ]);
         }
 
         /*
@@ -59,6 +68,8 @@ class BattleController extends AbstractController
         $tableau = null;
         $fighters = null;
         $zones = null;
+
+        $this->addFlash('success', 'Les combats sont terminés !');
 
         dump('termine');
 

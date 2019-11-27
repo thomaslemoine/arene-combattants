@@ -3,31 +3,46 @@
 {% block title %}Battle index{% endblock %}
 
 {% block body %}
-    <h1>Battle index</h1>
+    <h1>Liste des combats</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for battle in battles %}
-            <tr>
-                <td>{{ battle.id }}</td>
-                <td>
-                    <a href="{{ path('battle_show', {'id': battle.id}) }}">show</a>
-                    <a href="{{ path('battle_edit', {'id': battle.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="2">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('battle_new') }}">Create new</a>
+    <a href="{{ path('battle_new') }}" class="btn btn-danger" role="button">Lancer les combats</a>
+    <hr>
+    {% for message in app.flashes('warning') %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+    <div class="table-responsive mt-1 mb-5">
+        <table class="table table-bordered table-striped" id="datatable-battle">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for battle in battles %}
+                <tr>
+                    <td>{{ battle.id }}</td>
+                    <td>
+                        <a href="{{ path('battle_show', {'id': battle.id}) }}">show</a>
+                        <a href="{{ path('battle_edit', {'id': battle.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
