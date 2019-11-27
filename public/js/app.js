@@ -56,4 +56,5 @@ $(document).ready( function () {
         placeholder: 'Sélectionner des combattants',
         language: "fr"
     });
+    $('[data-toggle="tooltip"]').tooltip()
 } );
