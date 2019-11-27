@@ -52,6 +52,17 @@
         </tbody>
     </table>
 
+    <h1>Combat(s) réalisé(s)</h1>
+    {% if battles == null %}
+        <p>Aucun combat réalisé</p>
+    {% endif %}
+    {% for battle in battles %}
+        <a href="{{ path('battle_show', {'id': battle.battle_id}) }}">Combat N°{{ battle.battle_id }}</a><br>
+    {% endfor  %}
+
+    <hr>
+
+
     <a href="{{ path('fighter_index') }}" class="btn btn-primary" role="button">Retour à la liste</a>
 
     <a class="btn btn-warning" href="{{ path('fighter_edit', {'slug': fighter.slug}) }}">Editer</a>
